@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-# require 'f3d-cli/version'
 require 'datebox'
 
 Gem::Specification.new do |gem|
@@ -19,5 +18,4 @@ Gem::Specification.new do |gem|
   # gem.test_files    = `git grep test`.split(/\n/).map {|f| File.basename(f.split(':').first)}
   gem.require_paths = ["lib"]
 
-  # gem.add_dependency 'disclosure-client', :git => 'git@github.com:forward/disclosure-client-ruby.git'
 end
