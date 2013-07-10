@@ -16,6 +16,8 @@ class TestPeriod < Test::Unit::TestCase
     assert_equal [Date.parse("2013-01-31")], Datebox::Period.split_dates(Date.parse("2013-01-01"), Date.parse("2013-01-31"), "month")
     assert_equal [Date.parse("2013-01-31")], Datebox::Period.split_dates(Date.parse("2012-12-02"), Date.parse("2013-02-02"), "month")
     assert_equal [Date.parse("2013-01-31"), Date.parse("2013-02-28")], Datebox::Period.split_dates(Date.parse("2012-12-10"), Date.parse("2013-03-03"), "month")
+    #instance method test
+    assert_equal [Date.parse("2013-06-16"), Date.parse("2013-06-23")], Datebox::Period.new("2013-06-10", "2013-06-27").split_dates("week") #mon to thu
   end
 
 end

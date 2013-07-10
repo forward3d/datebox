@@ -15,6 +15,10 @@ module Datebox
     def ==(other)
       @from == other.from && @to == other.to
     end
+    
+    def split_dates(period, options = {})
+      self.class.split_dates(from, to, period, options)
+    end
 
     class << self
       def split_dates(start_date, end_date, period, options = {})
