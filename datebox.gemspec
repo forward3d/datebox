@@ -18,4 +18,6 @@ Gem::Specification.new do |gem|
   # gem.test_files    = `git grep test`.split(/\n/).map {|f| File.basename(f.split(':').first)}
   gem.require_paths = ["lib"]
 
+  gem.license = 'MIT'
+
 end
