@@ -1,10 +1,11 @@
-require '../test_helper'
+require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestRelative < Test::Unit::TestCase
   
   def test_calculates_correctly
     # day
     assert_equal [Date.parse('2013-07-07')], Datebox::Relative.new.same_day.to('2013-07-07').dates
+    assert_equal [Date.parse('2013-07-06')], Datebox::Relative.new.day_before.to('2013-07-07').dates
     # week
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-07'), Datebox::Relative.new.last_week.to('2013-07-09') #tue
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-05'), Datebox::Relative.new.last_weekdays_between("Monday", "Friday").to('2013-07-09') #tue
