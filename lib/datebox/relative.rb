@@ -8,6 +8,17 @@ module Datebox
         relative_to = (relative_to.is_a?(Date) ? relative_to : Date.parse(relative_to))
         @period_proc.call relative_to
       end
+      
+      def last(period)
+        periods = [:day, :week, :month, :year]
+        raise "Expected one of: #{periods}" unless periods.include?(period)
+        case period
+          when :day then day_before
+          when :week then last_week
+          when :month then last_month
+          when :year then last_year
+        end
+      end
 
       def same_day
         @period_proc = Proc.new {|relative_to| Period.new(relative_to, relative_to) }
