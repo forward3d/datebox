@@ -23,8 +23,11 @@ module Datebox
     class << self
       def split_dates(start_date, end_date, period, options = {})
         return (start_date..end_date).to_a if period == "day"
-        return split_weekly_dates(start_date, end_date, options) if period == "week"
         return split_monthly_dates(start_date, end_date) if period == "month"
+        if period =~ /week/
+          return split_weekly_dates(start_date, end_date, options.merge({last_weekday: "Saturday"})) if period == "week_ss"
+          return split_weekly_dates(start_date, end_date, options)
+        end
       end
 
       def split_weekly_dates(start_date, end_date, options = {})

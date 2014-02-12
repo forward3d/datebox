@@ -10,11 +10,13 @@ module Datebox
       end
       
       def last(period)
-        periods = [:day, :week, :month, :year]
+        periods = [:day, :week, :week_ms, :week_ss, :month, :year] # week monday-sunday & week sunday-saturday
         raise "Expected one of: #{periods}" unless periods.include?(period)
         case period
           when :day then day_before
           when :week then last_week
+          when :week_ms then last_week
+          when :week_ss then last_week("Saturday")
           when :month then last_month
           when :year then last_year
         end
