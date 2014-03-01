@@ -1,7 +1,6 @@
 module Datebox
   class Relative
 
-      @period = nil
       @period_proc = nil
 
       def to(relative_to)
@@ -9,14 +8,12 @@ module Datebox
         @period_proc.call relative_to
       end
       
-      def last(period)
-        periods = [:day, :week, :week_ms, :week_ss, :month, :year] # week monday-sunday & week sunday-saturday
-        raise "Expected one of: #{periods}" unless periods.include?(period)
-        case period
+      def last(period, options = {})
+        raise "Expected one of: #{Period::PREDEFINED}" unless Period::PREDEFINED.include?(period.to_sym)
+        case period.to_sym
           when :day then day_before
-          when :week then last_week
-          when :week_ms then last_week
-          when :week_ss then last_week("Saturday")
+          when :n_days then last_n_days(options)
+          when :week then last_week(options)
           when :month then last_month
           when :year then last_year
         end
@@ -32,13 +29,15 @@ module Datebox
         self
       end
       
-      def last_days(days)
-        days = 1 if days <= 0 # days should always be greater than 0 since it only return last x days including relative to date
+      def last_n_days(options = {})
+        days = options[:days].to_i
+        days = 1 if days.nil? || days <= 0 # days should always be greater than 0 since it only return last x days including relative to date
         @period_proc = Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) }
         self
       end
 
-      def last_week(last_weekday = "Sunday")
+      def last_week(options = {})
+        last_weekday = options[:last_weekday] || "Sunday"
         @period_proc = Proc.new do |relative_to|
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
           Period.new(end_date - 6, end_date)
