@@ -31,6 +31,12 @@ module Datebox
         @period_proc = Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }
         self
       end
+      
+      def last_days(days)
+        days = 1 if days <= 0 # days should always be greater than 0 since it only return last x days including relative to date
+        @period_proc = Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) }
+        self
+      end
 
       def last_week(last_weekday = "Sunday")
         @period_proc = Proc.new do |relative_to|
