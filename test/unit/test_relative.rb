@@ -7,6 +7,10 @@ class TestRelative < Test::Unit::TestCase
     assert_equal [Date.parse('2013-07-07')], Datebox::Relative.new.same_day.to('2013-07-07').dates
     assert_equal [Date.parse('2013-07-06')], Datebox::Relative.new.day_before.to('2013-07-07').dates
 
+    # n days
+    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.new.last(:n_days, {:days => 30}).to('2014-06-30')
+    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.new.last(:n_days, {days: 30, exclusive: true}).to('2014-07-01')
+
     # week
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-07'), Datebox::Relative.new.last_week.to('2013-07-09') #tue
     assert_equal Datebox::Period.new('2013-06-30', '2013-07-06'), Datebox::Relative.new.last_week({:last_weekday => "Saturday"}).to('2013-07-09') #tue
@@ -16,6 +20,7 @@ class TestRelative < Test::Unit::TestCase
     # month
     assert_equal Datebox::Period.new('2013-06-01', '2013-06-30'), Datebox::Relative.new.last_month.to('2013-07-09')
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-09'), Datebox::Relative.new.month_to_date.to('2013-07-09')
+    assert_equal Datebox::Period.new('2013-02-01', '2013-02-28'), Datebox::Relative.new.last(:month).to('2013-03-02')
 
     # year
     assert_equal Datebox::Period.new('2012-01-01', '2012-12-31'), Datebox::Relative.new.last_year.to('2013-07-09')

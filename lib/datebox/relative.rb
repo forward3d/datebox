@@ -30,14 +30,17 @@ module Datebox
       end
       
       def last_n_days(options = {})
-        days = options[:days].to_i
-        days = 1 if days.nil? || days <= 0 # days should always be greater than 0 since it only return last x days including relative to date
-        @period_proc = Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) }
+        days = (options[:days] || options['days']).to_i
+        inclusive = (options[:exclusive] || options['exclusive']) ? false : true # inclusive by default
+        days = 1 if days.nil? || days <= 0 # days should always > 0 since it only return last x days
+        @period_proc = inclusive ?
+          Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) } :
+          Proc.new {|relative_to| Period.new(relative_to - days, relative_to - 1) }
         self
       end
 
       def last_week(options = {})
-        last_weekday = options[:last_weekday] || options["last_weekday"] || "Sunday"
+        last_weekday = options[:last_weekday] || options['last_weekday'] || 'Sunday'
         @period_proc = Proc.new do |relative_to|
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
           Period.new(end_date - 6, end_date)
