@@ -37,7 +37,7 @@ module Datebox
       end
 
       def last_week(options = {})
-        last_weekday = options[:last_weekday] || "Sunday"
+        last_weekday = options[:last_weekday] || options["last_weekday"] || "Sunday"
         @period_proc = Proc.new do |relative_to|
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
           Period.new(end_date - 6, end_date)

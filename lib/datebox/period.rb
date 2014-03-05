@@ -25,6 +25,8 @@ module Datebox
 
     class << self
       def split_dates(start_date, end_date, period, options = {})
+        period = period.to_sym
+        
         return (start_date..end_date).to_a                        if period == :day
         return split_days_dates(start_date, end_date, options)    if period == :n_days
         return split_weekly_dates(start_date, end_date, options)  if period == :week
@@ -44,7 +46,7 @@ module Datebox
       end
 
       def split_weekly_dates(start_date, end_date, options = {})
-        last_weekday = options[:last_weekday] || "Sunday"
+        last_weekday = options[:last_weekday] || options["last_weekday"] || "Sunday"
         end_dates = []
         end_of_week = (end_date.downto end_date - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
         while end_of_week - 6 >= start_date
