@@ -1,0 +1,4 @@
+2014-03-14 Robert Borkowski
+
+  * Version 0.2
+  * Changed Datebox::Relative methods from instance methods to class methods. This requires changes in code.
