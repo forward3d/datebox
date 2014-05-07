@@ -2,9 +2,11 @@ module Datebox
   class Relative
 
     @period_proc = nil
+    attr_reader :period_name
     
-    def initialize(proc)
+    def initialize(proc, name = nil)
       @period_proc = proc
+      @period_name = name
     end
 
     def to(relative_to)
@@ -26,11 +28,11 @@ module Datebox
       end
 
       def same_day
-        new Proc.new {|relative_to| Period.new(relative_to, relative_to) }
+        new Proc.new {|relative_to| Period.new(relative_to, relative_to) }, __method__.to_s
       end
 
       def day_before
-        new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }
+        new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }, __method__.to_s
       end
       
       def last_n_days(options = {})
@@ -40,7 +42,7 @@ module Datebox
         proc = inclusive ?
           Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) } :
           Proc.new {|relative_to| Period.new(relative_to - days, relative_to - 1) }
-        new proc
+        new proc, __method__.to_s
       end
 
       def last_week(options = {})
@@ -48,7 +50,7 @@ module Datebox
         new Proc.new { |relative_to|
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
           Period.new(end_date - 6, end_date)
-        }
+        }, __method__.to_s
       end
 
       def last_weekdays_between(start_day, end_day)
@@ -56,7 +58,7 @@ module Datebox
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == end_day }
           start_date = (end_date - 7 .. end_date).to_a.find { |d| d.strftime("%A") == start_day }
           Period.new(start_date, end_date)
-        }
+        }, __method__.to_s
       end
 
       def last_weeks_weekdays_as!(*days) #this one returns array!
@@ -64,7 +66,7 @@ module Datebox
           days.map do |p|
             (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == p }
           end
-        }
+        }, __method__.to_s
       end
 
       def last_month
@@ -72,14 +74,14 @@ module Datebox
           previous_month_start = Date.parse("#{relative_to.prev_month.strftime('%Y-%m')}-01")
           previous_month_end = previous_month_start.next_month - 1
           Period.new(previous_month_start, previous_month_end)
-        }
+        }, __method__.to_s
       end
 
       def month_to_date
         new Proc.new { |relative_to|
           month_start = Date.parse("#{relative_to.strftime('%Y-%m')}-01")
           Period.new(month_start, relative_to)
-        }
+        }, __method__.to_s
       end
 
       def last_year
@@ -87,14 +89,14 @@ module Datebox
           previous_year_start = Date.parse("#{relative_to.prev_year.year}-01-01")
           previous_year_end = previous_year_start.next_year - 1
           Period.new(previous_year_start, previous_year_end)
-        }
+        }, __method__.to_s
       end
 
       def year_to_date
         new Proc.new { |relative_to|
           year_start = Date.parse("#{relative_to.year}-01-01")
           Period.new(year_start, relative_to)
-        }
+        }, __method__.to_s
       end
 
     end
