@@ -27,6 +27,16 @@ module Datebox
         end
       end
 
+      def to_date(period, options = {})
+        raise "Expected one of: #{Period::PREDEFINED}" unless Period::PREDEFINED.include?(period.to_sym)
+        raise "Current doesn't make sense for parameter: #{period}" if [:day, :n_days].include?(period)
+        case period.to_sym
+          when :week then week_to_date(options)
+          when :month then month_to_date
+          when :year then year_to_date
+        end
+      end
+
       def same_day
         new Proc.new {|relative_to| Period.new(relative_to, relative_to) }, __method__.to_s
       end
@@ -65,6 +75,18 @@ module Datebox
         new Proc.new { |relative_to|
           days.map do |p|
             (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == p }
+          end
+        }, __method__.to_s
+      end
+
+      def week_to_date(options = {})
+        last_weekday = options[:last_weekday] || options['last_weekday'] || 'Sunday'
+        new Proc.new { |relative_to|
+          if relative_to.strftime("%A") == last_weekday
+            Period.new(relative_to - 6, relative_to)
+          else
+            end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
+            Period.new(end_date + 1, relative_to)
           end
         }, __method__.to_s
       end

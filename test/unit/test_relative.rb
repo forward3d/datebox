@@ -26,11 +26,18 @@ class TestRelative < Test::Unit::TestCase
     assert_equal Datebox::Period.new('2012-01-01', '2012-12-31'), Datebox::Relative.last_year.to('2013-07-09')
     assert_equal Datebox::Period.new('2013-01-01', '2013-07-09'), Datebox::Relative.year_to_date.to('2013-07-09')
 
-    # anything
+    # anything, past
     assert_equal Datebox::Period.new('2013-06-01', '2013-06-01'), Datebox::Relative.last(:day).to('2013-06-02')
     assert_equal Datebox::Period.new('2013-06-01', '2013-06-30'), Datebox::Relative.last(:month).to('2013-07-09')
     assert_equal Datebox::Period.new('2014-02-03', '2014-02-09'), Datebox::Relative.last(:week).to('2014-02-10')
     assert_equal Datebox::Period.new('2014-02-02', '2014-02-08'), Datebox::Relative.last(:week, {:last_weekday => "Saturday"}).to('2014-02-10')
+
+    # andything, up to date
+    assert_equal Datebox::Period.new('2015-03-15', '2015-03-21'), Datebox::Relative.to_date(:week, {:last_weekday => "Saturday"}).to('2015-03-21')
+    assert_equal Datebox::Period.new('2015-03-15', '2015-03-20'), Datebox::Relative.to_date(:week, {:last_weekday => "Saturday"}).to('2015-03-20')
+    assert_equal Datebox::Period.new('2015-03-01', '2015-03-20'), Datebox::Relative.to_date(:month).to('2015-03-20')
+    assert_equal Datebox::Period.new('2015-01-01', '2015-03-20'), Datebox::Relative.to_date(:year).to('2015-03-20')
+    assert_equal Datebox::Period.new('2015-01-01', '2015-03-20'), Datebox::Relative.year_to_date.to('2015-03-20')
 
     # the one that's different
     assert_equal [Date.parse('2013-07-01'), Date.parse('2013-07-03')], Datebox::Relative.last_weeks_weekdays_as!("Monday", "Wednesday").to('2013-07-05') #fri
