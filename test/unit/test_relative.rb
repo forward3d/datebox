@@ -1,6 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestRelative < Test::Unit::TestCase
+
+  def test_gives_back_correct_period_name_in_proc
+    assert_equal :day_in_19, Datebox::Relative.day_in_19.period_name
+  end
   
   def test_calculates_correctly
     # day
@@ -11,6 +15,7 @@ class TestRelative < Test::Unit::TestCase
     assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_apart(-2).to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_ago_2.to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-08')], Datebox::Relative.day_in_3.to('2013-08-05').dates
+    assert_equal [Date.parse('2013-08-20')], Datebox::Relative.day_in_19.to('2013-08-01').dates
 
     # n days
     assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {:days => 30}).to('2014-06-30')

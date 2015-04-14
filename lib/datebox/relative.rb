@@ -52,8 +52,13 @@ module Datebox
       def method_missing(m, *args, &block)  
         if (m.to_s =~ /^day_ago_\d+$/) or (m.to_s =~ /^day_in_\d+$/)
           days = m.to_s.split('_').last.to_i
-          return day_apart(-days) if m.to_s =~ /^day_ago_\d+$/
-          return day_apart(days) if m.to_s =~ /^day_in_\d+$/
+          if m.to_s =~ /^day_ago_\d+$/
+            return new Proc.new {|relative_to| Period.new(relative_to - days, relative_to - days) }, m
+          elsif m.to_s =~ /^day_in_\d+$/
+            return new Proc.new {|relative_to| Period.new(relative_to + days, relative_to + days) }, m
+          end
+          relative.send(:period_name, m)
+          return relative
         else
           super
         end
