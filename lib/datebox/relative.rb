@@ -45,6 +45,10 @@ module Datebox
         new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }, __method__.to_s
       end
       
+      def day_in(days_apart)
+        new Proc.new {|relative_to| Period.new(relative_to + days_apart, relative_to + days_apart) }, __method__.to_s
+      end
+      
       def last_n_days(options = {})
         days = (options[:days] || options['days']).to_i
         inclusive = (options[:exclusive] || options['exclusive']) ? false : true # inclusive by default
