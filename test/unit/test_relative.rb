@@ -6,8 +6,11 @@ class TestRelative < Test::Unit::TestCase
     # day
     assert_equal [Date.parse('2013-07-07')], Datebox::Relative.same_day.to('2013-07-07').dates
     assert_equal [Date.parse('2013-07-06')], Datebox::Relative.day_before.to('2013-07-07').dates
-    assert_equal [Date.parse('2013-07-02')], Datebox::Relative.day_in(1).to('2013-07-01').dates
-    assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_in(-2).to('2013-08-05').dates
+    assert_equal [Date.parse('2013-07-02')], Datebox::Relative.day_apart(1).to('2013-07-01').dates
+    assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_apart(-2).to('2013-08-05').dates
+    assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_apart(-2).to('2013-08-05').dates
+    assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_ago_2.to('2013-08-05').dates
+    assert_equal [Date.parse('2013-08-08')], Datebox::Relative.day_in_3.to('2013-08-05').dates
 
     # n days
     assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {:days => 30}).to('2014-06-30')

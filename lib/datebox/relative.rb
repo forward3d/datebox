@@ -45,9 +45,19 @@ module Datebox
         new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }, __method__.to_s
       end
       
-      def day_in(days_apart)
-        new Proc.new {|relative_to| Period.new(relative_to + days_apart, relative_to + days_apart) }, __method__.to_s
+      def day_apart(difference)
+        new Proc.new {|relative_to| Period.new(relative_to + difference, relative_to + difference) }, __method__.to_s
       end
+      
+      def method_missing(m, *args, &block)  
+        if (m.to_s =~ /^day_ago_\d+$/) or (m.to_s =~ /^day_in_\d+$/)
+          days = m.to_s.split('_').last.to_i
+          return day_apart(-days) if m.to_s =~ /^day_ago_\d+$/
+          return day_apart(days) if m.to_s =~ /^day_in_\d+$/
+        else
+          super
+        end
+      end  
       
       def last_n_days(options = {})
         days = (options[:days] || options['days']).to_i
