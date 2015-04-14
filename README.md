@@ -27,6 +27,6 @@ Allows splitting periods (returns ending dates of periods)
 It's also possible to calculate periods relative to given dates
 
     period_month = Datebox::Relative.last_month.to('2013-07-09') # uses period method
-    preiod_week = Datebox::Relative.last(:week).to('2013-07-09') # uses peiod symbol
+    preiod_week = Datebox::Relative.last(:week).to('2013-07-09') # uses period symbol
 
 It's best to have a look at code & tests
