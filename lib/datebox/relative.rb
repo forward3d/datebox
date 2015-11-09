@@ -109,6 +109,18 @@ module Datebox
           end
         }, __method__.to_s
       end
+      
+      def same_week(options = {})
+        last_weekday = options[:last_weekday] || options['last_weekday'] || 'Sunday'
+        new Proc.new { |relative_to|
+          if relative_to.strftime("%A") == last_weekday
+            Period.new(relative_to - 6, relative_to)
+          else
+            end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
+            Period.new(end_date + 1, end_date + 7)
+          end
+        }, __method__.to_s
+      end
 
       def last_month
         new Proc.new { |relative_to| 
@@ -122,6 +134,14 @@ module Datebox
         new Proc.new { |relative_to|
           month_start = Date.parse("#{relative_to.strftime('%Y-%m')}-01")
           Period.new(month_start, relative_to)
+        }, __method__.to_s
+      end
+
+      def same_month
+        new Proc.new { |relative_to| 
+          same_month_start = Date.parse("#{relative_to.strftime('%Y-%m')}-01")
+          same_month_end = same_month_start.next_month - 1
+          Period.new(same_month_start, same_month_end)
         }, __method__.to_s
       end
 

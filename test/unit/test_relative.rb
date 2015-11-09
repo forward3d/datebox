@@ -51,6 +51,13 @@ class TestRelative < Test::Unit::TestCase
 
     # the one that's different
     assert_equal [Date.parse('2013-07-01'), Date.parse('2013-07-03')], Datebox::Relative.last_weeks_weekdays_as!("Monday", "Wednesday").to('2013-07-05') #fri
+   
+   
+    assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-02') # mon
+    assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-03') # tue
+    assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-08') # sun
+
+    assert_equal Datebox::Period.new('2015-11-01', '2015-11-30'), Datebox::Relative.same_month.to('2015-11-30')
   end
 
 end
