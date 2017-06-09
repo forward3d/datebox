@@ -5,7 +5,7 @@ class TestRelative < Test::Unit::TestCase
   def test_gives_back_correct_period_name_in_proc
     assert_equal :day_in_19, Datebox::Relative.day_in_19.period_name
   end
-  
+
   def test_calculates_correctly
     # day
     assert_equal [Date.parse('2013-07-07')], Datebox::Relative.same_day.to('2013-07-07').dates
@@ -24,6 +24,7 @@ class TestRelative < Test::Unit::TestCase
     # week
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-07'), Datebox::Relative.last_week.to('2013-07-09') # tue
     assert_equal Datebox::Period.new('2013-06-30', '2013-07-06'), Datebox::Relative.last_week({:last_weekday => "Saturday"}).to('2013-07-09') #tue
+    assert_equal Datebox::Period.new('2015-10-26', '2015-11-01'), Datebox::Relative.last_week.to('2015-11-08') # sun
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-05'), Datebox::Relative.last_weekdays_between("Monday", "Friday").to('2013-07-09') # tue
     assert_equal Datebox::Period.new('2013-07-08', '2013-07-09'), Datebox::Relative.last_weekdays_between("Monday", "Tuesday").to('2013-07-09') #tue
 
@@ -51,11 +52,11 @@ class TestRelative < Test::Unit::TestCase
 
     # the one that's different
     assert_equal [Date.parse('2013-07-01'), Date.parse('2013-07-03')], Datebox::Relative.last_weeks_weekdays_as!("Monday", "Wednesday").to('2013-07-05') #fri
-   
-   
+
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-02') # mon
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-03') # tue
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-08') # sun
+
 
     assert_equal Datebox::Period.new('2015-11-01', '2015-11-30'), Datebox::Relative.same_month.to('2015-11-30')
   end

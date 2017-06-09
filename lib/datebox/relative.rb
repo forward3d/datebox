@@ -3,7 +3,7 @@ module Datebox
 
     @period_proc = nil
     attr_reader :period_name
-    
+
     def initialize(proc, name = nil)
       @period_proc = proc
       @period_name = name
@@ -44,12 +44,12 @@ module Datebox
       def day_before
         new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }, __method__.to_s
       end
-      
+
       def day_apart(difference)
         new Proc.new {|relative_to| Period.new(relative_to + difference, relative_to + difference) }, __method__.to_s
       end
-      
-      def method_missing(m, *args, &block)  
+
+      def method_missing(m, *args, &block)
         if (m.to_s =~ /^day_ago_\d+$/) or (m.to_s =~ /^day_in_\d+$/)
           days = m.to_s.split('_').last.to_i
           if m.to_s =~ /^day_ago_\d+$/
@@ -62,8 +62,8 @@ module Datebox
         else
           super
         end
-      end  
-      
+      end
+
       def last_n_days(options = {})
         days = (options[:days] || options['days']).to_i
         inclusive = (options[:exclusive] || options['exclusive']) ? false : true # inclusive by default
@@ -77,6 +77,7 @@ module Datebox
       def last_week(options = {})
         last_weekday = options[:last_weekday] || options['last_weekday'] || 'Sunday'
         new Proc.new { |relative_to|
+          relative_to -= 1
           end_date = (relative_to.downto relative_to - 6).to_a.find { |d| d.strftime("%A") == last_weekday }
           Period.new(end_date - 6, end_date)
         }, __method__.to_s
@@ -109,7 +110,7 @@ module Datebox
           end
         }, __method__.to_s
       end
-      
+
       def same_week(options = {})
         last_weekday = options[:last_weekday] || options['last_weekday'] || 'Sunday'
         new Proc.new { |relative_to|
@@ -123,7 +124,7 @@ module Datebox
       end
 
       def last_month
-        new Proc.new { |relative_to| 
+        new Proc.new { |relative_to|
           previous_month_start = Date.parse("#{relative_to.prev_month.strftime('%Y-%m')}-01")
           previous_month_end = previous_month_start.next_month - 1
           Period.new(previous_month_start, previous_month_end)
@@ -138,7 +139,7 @@ module Datebox
       end
 
       def same_month
-        new Proc.new { |relative_to| 
+        new Proc.new { |relative_to|
           same_month_start = Date.parse("#{relative_to.strftime('%Y-%m')}-01")
           same_month_end = same_month_start.next_month - 1
           Period.new(same_month_start, same_month_end)
@@ -162,5 +163,5 @@ module Datebox
 
     end
   end
-  
+
 end
