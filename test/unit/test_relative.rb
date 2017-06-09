@@ -24,6 +24,7 @@ class TestRelative < Test::Unit::TestCase
     # week
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-07'), Datebox::Relative.last_week.to('2013-07-09') # tue
     assert_equal Datebox::Period.new('2013-06-30', '2013-07-06'), Datebox::Relative.last_week({:last_weekday => "Saturday"}).to('2013-07-09') #tue
+    assert_equal Datebox::Period.new('2015-10-26', '2015-11-01'), Datebox::Relative.last_week.to('2015-11-08') # sun
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-05'), Datebox::Relative.last_weekdays_between("Monday", "Friday").to('2013-07-09') # tue
     assert_equal Datebox::Period.new('2013-07-08', '2013-07-09'), Datebox::Relative.last_weekdays_between("Monday", "Tuesday").to('2013-07-09') #tue
 
