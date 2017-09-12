@@ -1,4 +1,5 @@
-2014-03-14 Robert Borkowski
+0.4.3
+Changed behaviour of last_week to be more consistent with other last_ methods particularly on Sunday
 
-  * Version 0.2
-  * Changed Datebox::Relative methods from instance methods to class methods. This requires changes in code.
+0.2.0
+Changed Datebox::Relative methods from instance methods to class methods. This requires changes in code.
