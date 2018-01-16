@@ -1,3 +1,9 @@
+0.5.0
+Changes to Relative
+Change behaviour of last_n_days to return non-inclusive period of n days before provided
+last_n_days :exclusive parameter is gone, :inclusive parameter replaces it. Returned result is not inclusive by default.
+Introduced last_day for consistency (same as day_before)
+
 0.4.3
 Changed behaviour of last_week to be more consistent with other last_ methods particularly on Sunday
 

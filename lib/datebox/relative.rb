@@ -19,7 +19,7 @@ module Datebox
       def last(period, options = {})
         raise "Expected one of: #{Period::PREDEFINED}" unless Period::PREDEFINED.include?(period.to_sym)
         case period.to_sym
-          when :day then day_before
+          when :day then last_day
           when :n_days then last_n_days(options)
           when :week then last_week(options)
           when :month then last_month
@@ -41,9 +41,13 @@ module Datebox
         new Proc.new {|relative_to| Period.new(relative_to, relative_to) }, __method__.to_s
       end
 
-      def day_before
+      def last_day
         new Proc.new {|relative_to| Period.new(relative_to - 1, relative_to - 1) }, __method__.to_s
       end
+
+      # for backwards compatibility, we had only 'day_before' but last_day is more consistent with other calls
+      # @deprecated
+      def day_before; last_day; end 
 
       def day_apart(difference)
         new Proc.new {|relative_to| Period.new(relative_to + difference, relative_to + difference) }, __method__.to_s
@@ -66,7 +70,7 @@ module Datebox
 
       def last_n_days(options = {})
         days = (options[:days] || options['days']).to_i
-        inclusive = (options[:exclusive] || options['exclusive']) ? false : true # inclusive by default
+        inclusive = (options[:inclusive] || options['inclusive']) ? true : false # NOT inclusive by default
         days = 1 if days.nil? || days <= 0 # days should always > 0 since it only return last x days
         proc = inclusive ?
           Proc.new {|relative_to| Period.new(relative_to - days + 1, relative_to) } :

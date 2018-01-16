@@ -10,16 +10,20 @@ class TestRelative < Test::Unit::TestCase
     # day
     assert_equal [Date.parse('2013-07-07')], Datebox::Relative.same_day.to('2013-07-07').dates
     assert_equal [Date.parse('2013-07-06')], Datebox::Relative.day_before.to('2013-07-07').dates
+    assert_equal [Date.parse('2013-07-06')], Datebox::Relative.last_day.to('2013-07-07').dates
     assert_equal [Date.parse('2013-07-02')], Datebox::Relative.day_apart(1).to('2013-07-01').dates
     assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_apart(-2).to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_apart(-2).to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-03')], Datebox::Relative.day_ago_2.to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-08')], Datebox::Relative.day_in_3.to('2013-08-05').dates
     assert_equal [Date.parse('2013-08-20')], Datebox::Relative.day_in_19.to('2013-08-01').dates
+    
+    assert_equal Datebox::Period.new('2017-12-24', '2017-12-30'), Datebox::Relative.last_n_days({'days' => 7}).to('2017-12-31')
+    assert_equal Datebox::Period.new('2017-12-25', '2017-12-31'), Datebox::Relative.last_n_days({'days' => 7, 'inclusive' => true}).to('2017-12-31')
 
     # n days
-    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {:days => 30}).to('2014-06-30')
-    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {days: 30, exclusive: true}).to('2014-07-01')
+    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {days: 30, inclusive: true}).to('2014-06-30')
+    assert_equal Datebox::Period.new('2014-06-01', '2014-06-30'), Datebox::Relative.last(:n_days, {days: 30}).to('2014-07-01')
 
     # week
     assert_equal Datebox::Period.new('2013-07-01', '2013-07-07'), Datebox::Relative.last_week.to('2013-07-09') # tue
@@ -43,22 +47,23 @@ class TestRelative < Test::Unit::TestCase
     assert_equal Datebox::Period.new('2014-02-03', '2014-02-09'), Datebox::Relative.last(:week).to('2014-02-10')
     assert_equal Datebox::Period.new('2014-02-02', '2014-02-08'), Datebox::Relative.last(:week, {:last_weekday => "Saturday"}).to('2014-02-10')
 
-    # andything, up to date
+    # anything, up to date
     assert_equal Datebox::Period.new('2015-03-15', '2015-03-21'), Datebox::Relative.to_date(:week, {:last_weekday => "Saturday"}).to('2015-03-21')
     assert_equal Datebox::Period.new('2015-03-15', '2015-03-20'), Datebox::Relative.to_date(:week, {:last_weekday => "Saturday"}).to('2015-03-20')
+    assert_equal Datebox::Period.new('2015-03-16', '2015-03-20'), Datebox::Relative.to_date(:week, {:last_weekday => "Sunday"}).to('2015-03-20')
     assert_equal Datebox::Period.new('2015-03-01', '2015-03-20'), Datebox::Relative.to_date(:month).to('2015-03-20')
     assert_equal Datebox::Period.new('2015-01-01', '2015-03-20'), Datebox::Relative.to_date(:year).to('2015-03-20')
     assert_equal Datebox::Period.new('2015-01-01', '2015-03-20'), Datebox::Relative.year_to_date.to('2015-03-20')
 
-    # the one that's different
-    assert_equal [Date.parse('2013-07-01'), Date.parse('2013-07-03')], Datebox::Relative.last_weeks_weekdays_as!("Monday", "Wednesday").to('2013-07-05') #fri
-
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-02') # mon
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-03') # tue
     assert_equal Datebox::Period.new('2015-11-02', '2015-11-08'), Datebox::Relative.same_week.to('2015-11-08') # sun
-
+    assert_equal Datebox::Period.new('2015-11-01', '2015-11-07'), Datebox::Relative.same_week(last_weekday: 'Saturday').to('2015-11-07') # sat
 
     assert_equal Datebox::Period.new('2015-11-01', '2015-11-30'), Datebox::Relative.same_month.to('2015-11-30')
+
+    # the one method that's different (does not return period but array)
+    assert_equal [Date.parse('2013-07-01'), Date.parse('2013-07-03')], Datebox::Relative.last_weeks_weekdays_as!("Monday", "Wednesday").to('2013-07-05') #fri
   end
 
 end
